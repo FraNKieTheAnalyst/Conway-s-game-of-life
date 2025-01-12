@@ -37,4 +37,29 @@ for index_line in range(1, padded_frame.shape[0] - 1):
     for index_column in range(1, padded_frame.shape[1] - 1):
         count_neighbors = compute_number_neighbors(padded_frame, index_line, index_column)
         print(f"Cellule ({index_line-1}, {index_column-1}) a {count_neighbors} voisins vivants.")
+
+
+# Créer une nouvelle matrice pour la génération suivante
+new_frame = numpy.zeros_like(frame)  # Nouvelle matrice de la même taille que `frame`
+print ("matrice utilisé pour la génération d'une nouvelle:", new_frame)
+# Appliquer les règles du Jeu de la Vie
+for index_l in range(1, padded_frame.shape[0] - 1):  # Parcourir les lignes de la matrice sans bordure
+    for index_j in range(1, padded_frame.shape[1] - 1):  # Parcourir les colonnes de la matrice sans bordure
+        count_neighbors = compute_number_neighbors(padded_frame, index_l, index_j)
         
+        # Récupérer la valeur de la cellule actuelle
+        current_cell = padded_frame[index_l, index_j]
+        
+        # Appliquer les règles du jeu
+        if current_cell == 1:  # Si la cellule est vivante
+            if count_neighbors < 2 or count_neighbors > 3:  # Solitude ou surpopulation
+                new_frame[index_l - 1, index_j - 1] = 0  # Devient morte
+            else:
+                new_frame[index_l - 1, index_j - 1] = 1  # Reste vivante
+        else:  # Si la cellule est morte
+            if count_neighbors == 3:  # Reproduction
+                new_frame[index_l - 1, index_j - 1] = 1  # Devient vivante
+
+# Afficher le tableau original et le tableau mis à jour
+print("Matrice initiale :", padded_frame)
+print("\nNouvelle matrice après une génération :", new_frame)        
